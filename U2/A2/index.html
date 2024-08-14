@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Document</title>
+        <style >
+            /* footer {
+                min-height: 30 px;
+                background-color: blueviolet;
+            } */
+             canvas{
+                background-color: steelblue;
+             }
+        </style>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+
+        <canvas id="canvas" width="500" height="500"></canvas>
+        <!-- <footer>
+            <b></b>
+        </footer> -->
+     
+        <script type="text/javascript">
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "purple";
+            ctx.fillRect(100, 100, 100, 100);
+            ctx.fillStyle = "#f0d5fd";
+            ctx.fillRect(180, 180, 100, 100);
+            ctx.fillStyle = "rgba(138, 50, 183,0.5)";
+            ctx.fillRect(260, 260, 100, 100);
+        </script>
+        
+    </body>
+</html>
