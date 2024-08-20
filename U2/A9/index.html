@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Document</title>
+        <style >
+            /* footer {
+                min-height: 30 px;
+                background-color: blueviolet;
+            } */
+             canvas{
+                background-color: steelblue;
+             }
+        </style>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+
+        <canvas id="canvas" width="500" height="900"></canvas>
+        <!-- <footer>
+            <b></b>
+        </footer> -->
+     
+        <script type="text/javascript">
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+
+            ctx.strokeRect(20,20,100,100);
+
+            ctx.fillStyle = "purple";
+            ctx.fillRect(100, 100, 100, 100);
+            ctx.fillStyle = "#f0d5fd";
+            ctx.fillRect(180, 180, 100, 100);
+            ctx.fillStyle = "rgba(138, 50, 183,0.5)";
+            ctx.fillRect(260, 260, 100, 100);
+
+            ctx.lineWidth= 4;
+            ctx.strokeStyle= "purple"
+            ctx.strokeRect(340,340,100,100)
+
+            ctx.beginPath();
+            ctx.moveTo(320, 20);
+            ctx.lineTo(320, 100);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(100, 350);
+            ctx.lineTo(30, 400);
+            ctx.lineTo(230, 400);
+            ctx.closePath();
+            ctx.stroke();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(310, 150, 40, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(400, 150, 40, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.fillStyle = "pink";
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(310, 150, 30, 0.5, 1 * Math.PI);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(310, 150, 10, 0, 2 * Math.PI);
+            ctx.stroke();
+
+
+            ctx.beginPath();
+            ctx.arc(400, 150, 30, 0.7, 1 * Math.PI);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(380, 150, 5, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(410, 160, 5, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            ctx.font = "50px Segoe UI Black";
+            ctx.strokeText("Hello World!", 20, 520);
+            ctx.fillText("Hello World!", 20, 520);
+           
+
+            const grd = ctx.createLinearGradient(0, 0, 500, 500);
+            grd.addColorStop(0, "purple");
+            grd.addColorStop(0, "blue");
+            grd.addColorStop(1, "pink");
+
+            // Draw a filled Rectangle
+            ctx.fillStyle = grd;
+            ctx.fillRect(10, 530, 150, 100);
+
+            const grd2 = ctx.createRadialGradient(375, 580, 0, 375, 580, 90 );
+            grd2.addColorStop(0, "white");
+            grd2.addColorStop(0.5, "pink");
+            grd2.addColorStop(1, "purple");
+
+            // Draw a filled Rectangle
+            ctx.fillStyle = grd2;
+            ctx.fillRect(300, 530, 150, 100);
+
+
+            const img = new Image();
+            img.src= "pug.png"
+
+            img.addEventListener("load", () => {
+            ctx.drawImage(img, 180, 530,90,100);
+            });
+
+        </script>
+        
+    </body>
+</html>
