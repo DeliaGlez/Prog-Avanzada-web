@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Document</title>
+        <style >
+            /* footer {
+                min-height: 30 px;
+                background-color: blueviolet;
+            } */
+             canvas{
+                background-color: steelblue;
+             }
+        </style>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+
+        <canvas id="canvas" width="700" height="700"></canvas>
+        
+        <script type="text/javascript">
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+
+            canvas.addEventListener("click", function(e){
+                 ctx.beginPath();
+                ctx.arc(e.x, e.y, 40, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.fill();
+                
+            })
+
+            canvas.addEventListener("mouseover", function(e){
+                ctx.fillStyle = getRandomColor();
+                
+            })
+            
+            function getRandomColor() 
+            {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) 
+            {
+                color += letters[Math.floor(Math.random() * 16)];
+
+            }  
+                return color;
+            }
+        </script>
+        
+    </body>
+</html>
