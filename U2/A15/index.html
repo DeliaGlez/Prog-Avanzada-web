@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Document</title>
+        <style >
+             canvas{
+                background-color: steelblue;
+             }
+        </style>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+
+        <canvas id="canvas" width="700" height="700"></canvas>
+        
+        <script type="text/javascript">
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+            var flag =0;
+            ctx.fillStyle = getRandomColor();
+            canvas.addEventListener("click", function(e){
+                if (flag){
+                    ctx.beginPath();
+                    ctx.arc(e.x, e.y, 40, 0, 2 * Math.PI);
+                    ctx.stroke();
+                    ctx.fill();
+                }else{
+                    ctx.fillRect(e.x-50, e.y-50, 100, 100);
+                    ctx.strokeRect(e.x-50, e.y-50, 100, 100);
+                }
+                
+                
+            })
+
+            canvas.addEventListener("mouseout", function(e){
+                ctx.fillStyle = getRandomColor();
+                flag= (flag==0)?  1 : 0;
+                
+            })
+
+            canvas.addEventListener("mousemove", function(e){
+                ctx.beginPath();
+                ctx.arc(e.x, e.y, 1, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.fill();
+                
+            })
+            
+            function getRandomColor() {
+                var trans = '0.5'; // 50% transparency
+                var color = 'rgba(';
+                for (var i = 0; i < 3; i++) {
+                    color += Math.floor(Math.random() * 255) + ',';
+                }
+                color += trans + ')'; // add the transparency
+                return color;
+            }
+
+        </script>
+        
+    </body>
+</html>
