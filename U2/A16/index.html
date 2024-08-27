@@ -23,35 +23,39 @@
             const ctx = canvas.getContext("2d");
             var flag =0;
             var flagPaint=0;
-            ctx.fillStyle = getRandomColor();
+            var color = getRandomColor();   
+            ctx.fillStyle = color;
+
             canvas.addEventListener("click", function(e){
-               
-                
             })
 
             canvas.addEventListener("mouseout", function(e){
-                ctx.fillStyle = getRandomColor();
+                color = getRandomColor();
+                ctx.fillStyle = color;
                 flag= (flag==0)?  1 : 0;
                 
             })
 
             canvas.addEventListener("mousemove", function(e){
                 if(flagPaint){
+                    ctx.fillStyle = 'black';
                     ctx.beginPath();
-                    ctx.arc(e.x, e.y, 1, 0, 2 * Math.PI);
+                    ctx.arc(e.x, e.y, 3, 0, 2 * Math.PI);
                     ctx.stroke();
                     ctx.fill();
                 }
+                
                 
             })
 
             canvas.addEventListener("mouseup", function(e){
                 flagPaint =0;
+               
             })
 
             canvas.addEventListener("mousedown", function(e){
                 flagPaint =1;
-
+                ctx.fillStyle = color;
                 // pintar un rectangulo o un circulo al presionar
                 if (flag){
                     ctx.beginPath();
