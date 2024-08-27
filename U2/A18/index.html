@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Document</title>
+        <style >
+             canvas{
+                background-color: steelblue;
+             }
+        </style>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+
+        <canvas id="canvas" width="700" height="700"></canvas>
+        
+        <script type="text/javascript">
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+            var color = getRandomColor();   
+            ctx.fillStyle = color;
+
+            
+
+            
+            document.addEventListener("keydown",function(e){
+                console.log(e);
+                
+                //87 83 65,68
+                color = getRandomColor();
+                ctx.fillStyle = color;
+                
+                let x =Math.random() * 700;
+                let y =Math.random() * 700;
+                ctx.beginPath();
+                ctx.fillRect(x, y, 40, 40);
+
+                ctx.font = "20px Courier New";
+                ctx.strokeText(e.key,x+10,y+15)
+            })
+
+
+            function getRandomColor() {
+                var trans = '0.5'; // 50% transparency
+                var color = 'rgba(';
+                for (var i = 0; i < 3; i++) {
+                    color += Math.floor(Math.random() * 255) + ',';
+                }
+                color += trans + ')'; // add the transparency
+                return color;
+            }
+
+        </script>
+        
+    </body>
+</html>
