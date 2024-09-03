@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Document</title>
+        <style >
+             canvas{
+                background-color: gray;
+             }
+        </style>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+
+        <canvas id="canvas" width="700" height="700"></canvas>
+        
+        <script type="text/javascript">
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+            
+            ctx.fillStyle = color;
+
+            let x =350;
+            let y =350;
+            ctx.fillRect(x, y, 40, 40);
+            var dir = "";
+            var speed=5;
+
+            class Rectangulo {
+                constructor(x,y,ancho, alto,color,speed) {
+                    this.x=x;
+                    this.y=y;
+                    this.alto=alto;
+                    this.ancho=ancho;
+                    this.color=getRandomColor();
+                    this.speed = speed;
+
+                    
+                }
+                        // Método
+                colisiona(objeto) {
+
+                    if(this.x < objeto.x + objeto.ancho &&
+                      this.x + this.ancho > objeto.x &&
+                      this.y < objeto.y + objeto.alto &&
+                      this.y + this.alto > objeto.y){  
+                        return true  
+                    }
+                    return false;
+                }
+            }
+            var color = getRandomColor();  
+            let player = new Rectangulo(350, 350,60,60,color,5);
+
+            let apple = new Rectangulo(100, 100,30,30,"blue",5);
+
+            document.addEventListener("keydown",function(e){
+               
+
+                switch(e.keyCode){
+                    case 87:
+                        dir = "up";
+                        
+                    break;
+                    case 83:
+                        dir = "down";
+                    break;
+                    case 65:
+                        dir = "left";
+                    break;
+                    case 68:
+                        dir = "right";
+                    break;
+                    case 32:
+                        speed+=5;
+                    break;
+
+                }
+                
+            })
+
+            function update(){
+                switch(dir){
+                    case "up":
+                        player.y=player.y-speed;
+                        if (player.y<-30) 
+                        player.y= 700;
+                    break;
+                    case "down":
+                        player.y=player.y+speed;
+                        if (player.y>700) 
+                        player.y= -30;
+                    break;
+                    case "left":
+                        player.x=player.x-speed;
+                        if(player.x<10) 
+                        player.x= 710;
+                    break;
+                    case "right":
+                        player.x=player.x+speed;
+                        if(player.x>710) 
+                        player.x= -10;
+                    break;
+
+                }
+               
+                
+                if(player.colisiona(apple)){
+                    apple.x=Math.floor(Math.random() * 650);
+                    apple.y= Math.floor(Math.random() * 650);
+                    apple.color=getRandomColor();
+                }
+                
+            }
+
+           
+            function pintar(){
+                
+                
+                ctx.fillStyle ='steelblue';
+                ctx.fillRect(0, 0, 700, 700);
+
+                //jugador
+                color = player.color;
+                ctx.fillStyle = color;
+                ctx.fillRect(player.x, player.y, player.alto,player.ancho);
+                
+
+                //apple
+                //color = apple.color;
+                ctx.fillStyle = apple.color;
+                ctx.fillRect(apple.x, apple.y, apple.alto,apple.ancho);
+                
+
+                ctx.font = "20px Courier New";
+                ctx.fillStyle ='black';
+                ctx.strokeText("velocidad:"+speed,10,20)
+                
+                update();
+                requestAnimationFrame(pintar);
+            }
+            
+            requestAnimationFrame(pintar); 
+
+
+            function getRandomColor() {
+                var trans = '0.5'; // 50% transparency
+                var color = 'rgba(';
+                for (var i = 0; i < 3; i++) {
+                    color += Math.floor(Math.random() * 255) + ',';
+                }
+                color += trans + ')'; // add the transparency
+                return color;
+
+               
+            }
+
+        </script>
+        
+    </body>
+</html>
