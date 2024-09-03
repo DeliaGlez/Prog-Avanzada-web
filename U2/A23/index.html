@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Document</title>
+        <style >
+             canvas{
+                background-color: #B2EEFE;
+             }
+        </style>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+
+        <canvas id="canvas" width="768" height="433"></canvas>
+        
+        <script type="text/javascript">
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+           
+            canvas.addEventListener('mousemove', function(event) {
+           
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            
+            console.log(`X: ${x}, Y: ${y}`);
+            });
+             
+           //Bloques con tornillos
+            block(ctx, 265,148, 146, 241,10,'#84BFFF');
+            block(ctx, 170,241, 146, 148,10,'#FFC3B8');
+            block(ctx, 652,241, 146, 148,10,'#51D96B');
+
+
+            //Arbusto
+
+            ctx.beginPath();
+            ctx.fillStyle= "#42754C";
+            ctx.arc(47, 358, 20, 2*Math.PI, 0, false);
+            ctx.arc(61, 358, 10, 2*Math.PI, 0, false);
+            ctx.stroke();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.fillStyle= "#53D270";
+            ctx.arc(46, 364, 20, 2*Math.PI, 0, false);
+            ctx.arc(62, 376, 20, 2*Math.PI, 0, false);
+            ctx.arc(35, 376, 20, 2*Math.PI, 0, false);
+            ctx.stroke();
+            ctx.fill();
+            
+            //Tubo
+
+            let gradient = ctx.createLinearGradient(605, 245, 507, 245); // De derecha a izquierda
+            gradient.addColorStop(1, "#3BB143");  // Color verde claro
+            gradient.addColorStop(0, "#050907");  // Color verde oscuro
+
+                // Parte superior del tubo
+            ctx.fillStyle = gradient;
+            ctx.lineWidth = 8;
+            ctx.strokeRect(507, 245, 98, 44); 
+            ctx.fillRect(507, 245, 98, 44);   
+
+                // Parte inferior del tubo
+            let gradient2 = ctx.createLinearGradient(602, 292, 510, 292); // De derecha a izquierda
+            gradient2.addColorStop(1, "#3BB143");
+            gradient2.addColorStop(0, "#050907");
+                
+            ctx.fillStyle = gradient2;
+            ctx.lineWidth = 4;
+            ctx.strokeRect(510, 292, 92, 99); 
+            ctx.fillRect(510, 292, 92, 99);   
+
+
+            //Suelo
+            ctx.fillStyle= "#EF967C";
+            ctx.fillRect(0, 403, 768, 433);
+
+            ctx.fillStyle= "#FFC2C5";
+            ctx.strokeRect(0, 390, 768, 18);
+            ctx.fillRect(0, 390, 768, 18);
+           
+            //Bloques powerUp
+            powerUpBlock(27,197)
+            powerUpBlock(123,53)
+            powerUpBlock(126+47,53)
+            powerUpBlock(700,101)
+            
+            function block(ctx, x, y, width, height, radius,color) {
+                 // Sombra
+                ctx.beginPath();
+                ctx.fillStyle = 'black';
+                ctx.lineWidth = 2;
+                ctx.moveTo(x + radius + 20, y + 25); // Desplaza la sombra hacia la derecha y abajo
+                ctx.arcTo(x + width + 20, y + 25, x + width + 20, y + radius + 25, radius);
+                ctx.arcTo(x + width + 20, y + height + 25, x + width + 20 - radius, y + height + 25, radius);
+                ctx.arcTo(x + 20, y + height + 25, x + 20, y + height - radius + 25, radius);
+                ctx.arcTo(x + 20, y + 25, x + 20 + radius, y + 25, radius);
+                ctx.stroke();
+                ctx.fill();
+
+                //Principal
+                ctx.beginPath();
+                ctx.fillStyle = color;
+                ctx.lineWidth = 4;
+                ctx.moveTo(x, y + radius);
+                ctx.arcTo(x, y + height, x + radius, y + height, radius);
+                ctx.arcTo(x + width, y + height, x + width, y + height - radius, radius);
+                ctx.arcTo(x + width, y, x + width - radius, y, radius);
+                ctx.arcTo(x, y, x, y + radius, radius);
+                ctx.stroke();
+                ctx.fill();
+
+                //Tornillos
+                ctx.beginPath();
+                ctx.fillStyle = "#D5E7F8"
+                ctx.arc(x+15, y+15, 10, 2*Math.PI, 0, false);
+                ctx.stroke();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(x+width-15, y+15, 10, 2*Math.PI, 0, false);
+                ctx.stroke();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(x+15, y-15+height, 10, 2*Math.PI, 0, false);
+                ctx.stroke();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(x-15+width, y-15+height, 10, 2*Math.PI, 0, false);
+                ctx.stroke();
+                ctx.fill();
+            }
+
+            function powerUpBlock(x,y){
+                
+                var width=47;
+                var height=47;
+                ctx.strokeRect(x, y, width, height);
+                ctx.fillStyle = "#FD9164"
+                ctx.fillRect(x, y, 47, 47);
+                
+                //Tornillos
+                ctx.beginPath();
+                ctx.fillStyle= "black";
+                ctx.arc(x+5, y+5, 1, 2*Math.PI, 0, false);
+                ctx.stroke();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(x+width-5, y+5, 1, 2*Math.PI, 0, false);
+                ctx.stroke();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(x+5, y-5+height, 1, 2*Math.PI, 0, false);
+                ctx.stroke();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(x-5+width, y-5+height, 1, 2*Math.PI, 0, false);
+                ctx.stroke();
+                ctx.fill();
+            }
+            
+
+        </script>
+        
+    </body>
+</html>
