@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Document</title>
+        <style >
+             canvas{
+                background-color: #2000A0;
+             }
+        </style>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+
+        <canvas id="canvas" width="440" height="330"></canvas>
+        
+        <script type="text/javascript">
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+       
+            //Anillos
+            ctx.beginPath();
+            ctx.strokeStyle = "#FFFF00"
+            ctx.lineWidth = 3;
+            ctx.arc(56, 207, 15, 2*Math.PI, 0, false);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(120, 207, 15, 2*Math.PI, 0, false);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(190, 207, 15, 2*Math.PI, 0, false);
+            ctx.stroke();
+
+            //Palmera 1
+
+            ctx.fillStyle= "#804000";
+            ctx.fillRect(268, 70, 13, 159);
+            drawLeaf(ctx, 274, 70, 200, 50, 190, 20);   
+            drawLeaf(ctx, 274, 70, 340, 50, 363, 71);   
+            drawLeaf(ctx, 274, 70, 200, 100, 190, 130); 
+            drawLeaf(ctx, 274, 70, 340, 100, 350, 130); 
+            drawLeaf(ctx, 274, 70, 300, 10, 258, 7);    
+            drawLeaf(ctx, 274, 70, 400, 10, 370, 0);   
+
+            //Palmera 2
+            drawLeaf(ctx, -40, 80, 100, 10, 84, 50);   
+            drawLeaf(ctx, -40, 80, 50, 100, 55, 94);   
+            drawLeaf(ctx, -40, 80, 30, 20, 39, 17);   
+
+            //Flor
+
+            ctx.fillStyle= "#40A000";
+            ctx.fillRect(390, 190, 6, 42);
+
+            ctx.beginPath();
+            ctx.fillStyle = "#FFFF00"; 
+            ctx.arc(393, 185, 25, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(393, 185, 15, 0, 2 * Math.PI);
+            ctx.fillStyle = "#4B614A";  
+            ctx.fill();
+
+
+            //Suelo
+            patronSuelo(0,250);
+            
+            ctx.fillStyle= "rgba(0, 0, 0, 0.62)";
+            ctx.fillRect(0, 264, 440, 14);
+
+            ctx.fillStyle= "#006000";
+            ctx.fillRect(0, 254, 440, 11);
+            ctx.fillStyle= "#40A000";
+            ctx.fillRect(0, 243, 440, 11);
+            ctx.fillStyle= "#80E000";
+            ctx.fillRect(0, 232, 440, 11);
+            
+
+            function patronSuelo(startX,startY){
+                const tileSize = 20;
+                const color1 = '#602000'; 
+                const color2 = '#C06000'; 
+
+                const rows = 4;
+                const columns = 22;
+
+                for (let y = 0; y < rows; y++) {
+                    for (let x = 0; x < columns; x++) {
+                        
+                        if ((x + y) % 2 === 0) {
+                            ctx.fillStyle = color1;
+                        } else {
+                            ctx.fillStyle = color2;
+                        }
+                        ctx.fillRect(startX + x * tileSize, startY + y * tileSize, tileSize, tileSize);
+                    }
+                }
+            }
+
+            function drawLeaf(ctx, startX, startY, controlX, controlY, endX, endY) {
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.quadraticCurveTo(controlX, controlY, endX, endY);
+                ctx.lineTo(startX, startY); 
+                ctx.fillStyle = "#66FF33";  
+                ctx.fill();
+            }
+
+        </script>
+        
+    </body>
+</html>
