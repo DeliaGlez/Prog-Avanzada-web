@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Document</title>
+        <style >
+             canvas{
+                background-color: #FF9A57;
+             }
+        </style>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+
+        <canvas id="canvas" width="770" height="625"></canvas>
+        
+        <script type="text/javascript">
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+           
+            canvas.addEventListener('mousemove', function(event) {
+            // Obtener las coordenadas del mouse relativas al canvas
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            // Imprimir las coordenadas en la consola
+            console.log(`X: ${x}, Y: ${y}`);
+            });
+             
+            ctx.fillStyle = '#FFE76C';
+            ctx.beginPath();
+            ctx.arc(770, 10, 180, 2*Math.PI, 0, false);
+            ctx.fill();
+
+            drawTriangle(145,239,385,624,-200,625,"#FFB66C")
+            drawTriangle(145,239,370,599,404,382,"#FFD46C")
+            drawTriangle(404,383,369,604,597,280,"#FFB66C")
+            drawTriangle(597,280,350,622,858,625,"#FFB66C")
+            drawTriangle(597,280,770,508,770,376,"#FFD46C")
+
+            
+            function drawTriangle( x1, y1, x2, y2, x3, y3, fillColor) {
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.lineTo(x3, y3);
+                ctx.closePath();
+
+                ctx.fillStyle = fillColor;
+                ctx.fill();
+            }
+            
+
+        </script>
+        
+    </body>
+</html>
