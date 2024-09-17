@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #b1e3ff;
+            text-align: center;
+
+        }
+        
+        input {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+            font-size: 16px;
+        }
+        button {
+            background-color: #6a0dad; 
+            color: white;
+            padding: 15px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        
+        h2 {
+            margin-top: 20px;
+            color: #6a0dad; 
+        }
+        form {
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Acceso al sistema</h1>
+        <form  @submit.prevent="onSubmit" v-if="!isLogged">
+        
+            <input type="email" v-model="email" placeholder="email" required/>
+            <input type="password" v-model="password" placeholder="password" required />
+            <button type="submit">Entrar</button>
+    
+        </form>
+
+        <h1 v-else>Bienvenido</h1>
+
+
+    </div>
+    
+
+    <script>
+      const { createApp, ref } = Vue
+  
+      createApp({
+        setup() {
+
+            let email= ref('');
+            let password= ref('');
+            let isLogged=ref(false);
+            
+
+          return {
+            email,
+            password,
+            isLogged
+            
+            
+          }
+        },
+        methods: {
+            onSubmit(){
+                console.log(this.email);
+                console.log(this.password);
+
+                fetch('users.json')
+                .then(response => response.json())
+                .then((data) => {
+                    for (let user of data) {
+                        if (this.email === user.email && this.password === user.password) {
+                            this.isLogged=true;
+                            console.log(isLogged);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.log(error);  
+                });
+                
+            }
+         }
+      }).mount('#app') 
+    </script>
+</body>
+</html>
