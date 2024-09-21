@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #b1e3ff;
+            text-align: center;
+        }
+
+        input {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #6a0dad;
+            color: white;
+            padding: 15px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        h2 {
+            margin-top: 20px;
+            color: #6a0dad;
+        }
+
+        form {
+            width: 70%;
+            font-family: 'Arial', sans-serif;
+            display: inline-block;
+            justify-content: center;
+            align-items: center;
+        }
+
+        table {
+            width: 100%;
+            background-color: azure;
+        }
+
+        table, th, td {
+            border: 2px solid rgb(255, 255, 255);
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h1>Acceso al sistema</h1>
+        <form @submit.prevent="onSubmit" v-if="!isLogged">
+            <input type="email" v-model="email" placeholder="email" required />
+            <input type="password" v-model="password" placeholder="password" required />
+            <button type="submit">Entrar</button>
+        </form>
+
+        <div v-if="isLogged">
+            <h1>Bienvenido</h1>
+
+            <button @click="addUser " v-if="!isAdd && !isEdit">Nuevo usuario</button>
+            <form @submit.prevent="onSubmit" v-if="isAdd || isEdit">
+                <h2 v-if="isAdd ">Agregar</h2>
+                <h2 v-if="isEdit">Editar</h2>
+                <input type="number" v-model="id" placeholder="id" required />
+                <input type="nombre" v-model="nombre" placeholder="nombre" required />
+                <input type="email" v-model="email" placeholder="email" required />
+                <input type="number" v-model="age" placeholder="edad" required />
+                <input type="text" v-model="company" placeholder="Empresa" required />
+                <button type="submit">Guardar</button>
+                <button type="button" @click="isAdd = false; isEdit = false">Cancelar</button>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Edad</th>
+                        <th>Empresa</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="user in users" :key="user.id">
+                        <td>{{user.id}}</td>
+                        <td>{{user.name}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.age}}</td>
+                        <td>{{user.company}}</td>
+                        <td>
+                            <button @click="editUser(user)">Editar</button>
+                            <button @click="deleteUser(user.id)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp, ref, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                const email = ref('');
+                const password = ref('');
+
+                const id  = ref('');
+                const nombre = ref('');
+                const age = ref('');
+                const company  = ref('');
+
+                const isAdd= ref(false);
+                const isEdit = ref(false);
+
+
+                const isLogged = ref(localStorage.getItem("isLogged") === 'true');
+                const users = ref([]);
+
+                const loadUsers = () => {
+                    fetch('users.json')
+                        .then(response => response.json())
+                        .then((data) => {
+                            users.value = data;
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                };
+
+                onMounted(() => {
+                    if (isLogged.value) {
+                        loadUsers();
+                    }
+                });
+
+                return {
+                    email,
+                    password,
+                    isLogged,
+                    users,
+                    loadUsers,
+                    id,
+                    nombre,
+                    age,
+                    company,
+                    isAdd,
+                    isEdit,
+
+                };
+            },
+            methods: {
+                onSubmit() {
+                    if (!this.isLogged) {
+                        fetch('users.json')
+                            .then(response => response.json())
+                            .then((data) => {
+                                for (let user of data) {
+                                    if (this.email === user.email && this.password === user.password) {
+                                        this.isLogged = true;
+                                        localStorage.setItem("isLogged", "true");
+                                        localStorage.setItem("user", JSON.stringify(user));
+                                        this.loadUsers();
+                                        break;
+                                    }
+                                }
+                            })
+                            .then(() => {
+                                if (!this.isLogged) {
+                                    alert("Credenciales incorrectas");
+                                }
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            });
+                    } else if (this.isLogged) {
+                        if (this.isAdd) {
+                            const newUser = {
+                                id: this.id,
+                                name: this.nombre,
+                                email: this.email,
+                                age: this.age,
+                                company: this.company
+                            };
+                            this.users.push(newUser);
+                            this.clean();
+
+                        }
+                        else if (this.isEdit) {
+                            const userIndex =this.users.findIndex(user => user.id === this.id);
+                            if (userIndex !== -1) {
+                                this.users[userIndex] = {
+                                    id: this.id,
+                                    name: this.nombre,
+                                    email: this.email,
+                                    age: this.age,
+                                    company: this.company
+                                };
+                            }
+                            this.clean();
+                        }
+
+                    }
+                },
+                editUser(user) {
+                    this.isEdit = true;
+                    this.isAdd = false;
+                    this.id = user.id;
+                    this.nombre = user.name;
+                    this.email = user.email;
+                    this.age = user.age;
+                    this.company = user.company;
+                },
+                deleteUser(userId) {
+                    this.users = this.users.filter(user => user.id !== userId);
+                },
+                addUser() {
+                    this.clean();
+                    this.isAdd = true;
+                },
+                clean() {
+                    this.isEdit = false;
+                    this.isAdd = false;
+                    this.id  =""
+                    this.nombre =""
+                    this.email =""
+                    this.age =""
+                    this.company  =""
+                }
+
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
