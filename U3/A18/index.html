@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #b1e3ff;
+            text-align: center;
+            flex-direction: column;
+        }
+        
+        input {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #6a0dad;
+            color: white;
+            padding: 15px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        
+        h2 {
+            margin-top: 20px;
+            color: #6a0dad;
+        }
+        
+        .movie-card {
+            border: 2px solid #6a0dad;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px;
+            background-color: white;
+            display: inline-block;
+            width: 200px;
+        }
+        
+        .movie-card img {
+            width: 100%;
+            border-radius: 5px;
+        }
+        
+        .movies-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .inputrating {
+            width: 20%;
+            margin-left: 80vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div v-if="!isLogged">
+            <h1>Acceso al sistema</h1>
+            <form @submit.prevent="onSubmit">
+                <input type="text" v-model="username" placeholder="username" required />
+                <input type="password" v-model="password" placeholder="password" required />
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+
+        <div v-if="isLogged">
+            <div v-if="!details.active">
+                <h1>Peliculas</h1>
+                <div class="movies-container">
+                    <div v-for="movie in movies" :key="movie.id" class="movie-card">
+                        <img :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path" alt="Movie Poster">
+                        <h2>{{ movie.title }}</h2>
+                        <p>{{ movie.release_date }}</p>
+                        <button @click="fetchMovieDetails(movie.id)">Ver detalles</button>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="details.active" class="details">
+                <div class="details-content">
+                    <h2>{{ details.movie.title }}</h2>
+                    <img :src="'https://image.tmdb.org/t/p/w200' + details.movie.poster_path" alt="Movie Poster">
+                    <p><strong>Release Date:</strong> {{ details.movie.release_date }}</p>
+                    <p><strong>Rating:</strong> {{ details.movie.vote_average.toFixed(1) }} / 10</p>
+                    <p><strong>Your Rating:</strong> {{ details.movie.userRating !== null ? details.movie.userRating : 'No rating given' }}</p>
+                    <p><strong>Genres:</strong> {{ details.movie.genres.map(genre => genre.name).join(', ') }}</p>
+                    <p><strong>Overview:</strong> {{ details.movie.overview }}</p>
+                    <p><strong>Budget:</strong> ${{ details.movie.budget.toLocaleString() }}</p>
+                    <p><strong>Revenue:</strong> ${{ details.movie.revenue.toLocaleString() }}</p>
+                    <p><strong>Tagline:</strong> {{ details.movie.tagline }}</p>
+                    
+                    <h2>Rating</h2>
+                    <div class="inputrating">
+                        <input type="number" v-model="newRating" placeholder="0" min="0" max="10" step="1">
+                    </div>
+                    
+                    <button @click="rateMovie">Calificar</button>
+                    <button @click="deleteRating">Eliminar calificación</button>
+                    <button @click="details.active = false">Volver</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref } = Vue;
+
+        createApp({
+            setup() {
+                const username = ref('');
+                const password = ref('');
+                const isLogged = ref(false);
+                const movies = ref([]);
+                const details = ref({ active: false, movie: {} });
+                const sessionId = ref('');
+                const newRating = ref(null);
+
+                const fetchMovies = () => {
+                    const options = {
+                        method: 'GET',
+                        headers: {
+                            accept: 'application/json',
+                            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOGQwZDQxYzlmZTE4NWIzZTYwMjhiZjE2NjJlMzM0YiIsIm5iZiI6MTcyNzIzOTc1MS42Mjg2NzgsInN1YiI6IjY2ZjJmYzAzNzMwMGE1YmEyMTNjMGRhMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.sqPHKaIIci7K6c2jZz_ytvqRS5Kpf3JGcrnfRMB9Ii0'
+                        }
+                    };
+
+                    fetch('https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc', options)
+                        .then(response => response.json())
+                        .then(data => {
+                            movies.value = data.results;
+                        })
+                        .catch(err => console.error(err));
+                };
+
+                const fetchMovieDetails = (id) => {
+                    const options = {
+                        method: 'GET',
+                        headers: {
+                            accept: 'application/json',
+                            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOGQwZDQxYzlmZTE4NWIzZTYwMjhiZjE2NjJlMzM0YiIsIm5iZiI6MTcyNzIzOTc1MS42Mjg2NzgsInN1YiI6IjY2ZjJmYzAzNzMwMGE1YmEyMTNjMGRhMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.sqPHKaIIci7K6c2jZz_ytvqRS5Kpf3JGcrnfRMB9Ii0'
+                        }
+                    };
+                
+                    fetch(`https://api.themoviedb.org/3/movie/${id}?language=en-US`, options)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Mantener el rating existente si lo hay
+                            const existingMovie = movies.value.find(movie => movie.id === id);
+                            if (existingMovie) {
+                                data.userRating = existingMovie.userRating;
+                            }
+                            details.value.movie = data;
+                            details.value.active = true;
+                        })
+                        .catch(err => console.error(err));
+                };
+                
+
+                const onSubmit = async () => {
+                    try {
+                        const tokenResponse = await fetch('https://api.themoviedb.org/3/authentication/token/new?api_key=d8d0d41c9fe185b3e6028bf1662e334b');
+                        const tokenData = await tokenResponse.json();
+
+                        const loginResponse = await fetch('https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=d8d0d41c9fe185b3e6028bf1662e334b', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                username: username.value,
+                                password: password.value,
+                                request_token: tokenData.request_token
+                            })
+                        });
+
+                        const loginData = await loginResponse.json();
+
+                        if (loginData.success) {
+                            const sessionResponse = await fetch(`https://api.themoviedb.org/3/authentication/session/new?api_key=d8d0d41c9fe185b3e6028bf1662e334b`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    request_token: tokenData.request_token
+                                })
+                            });
+
+                            const sessionData = await sessionResponse.json();
+                            sessionId.value = sessionData.session_id;
+                            isLogged.value = true;
+                            fetchMovies();
+                        } else {
+                            alert('Credenciales incorrectas');
+                        }
+                    } catch (error) {
+                        console.error('Error en el inicio de sesión:', error);
+                    }
+                };
+
+                const rateMovie = async () => {
+                    if (details.value.active && newRating.value !== null) {
+                        const movieId = details.value.movie.id;
+                        try {
+                            const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/rating?api_key=d8d0d41c9fe185b3e6028bf1662e334b&session_id=${sessionId.value}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ value: newRating.value })
+                            });
+                            const data = await response.json();
+
+                            if (response.ok) {
+                                alert('Rating enviado con éxito');
+                                details.value.movie.userRating = newRating.value;
+                                const index = movies.value.findIndex(p => p.id === movieId);
+                                if (index !== -1) {
+                                    movies.value[index].userRating = newRating.value;
+                                }
+                            } else {
+                                alert('Error al enviar rating: ' + data.status_message);
+                            }
+                        } catch (error) {
+                            console.error('Error al enviar rating:', error);
+                        }
+                    }
+                };
+
+                const deleteRating = async () => {
+                    if (details.value.active) {
+                        const movieId = details.value.movie.id;
+                        const options = {
+                            method: 'DELETE',
+                            headers: {
+                                accept: 'application/json',
+                                'Content-Type': 'application/json',
+                            }
+                        };
+
+                        try {
+                            const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/rating?api_key=d8d0d41c9fe185b3e6028bf1662e334b&session_id=${sessionId.value}`, options);
+                            const data = await response.json();
+
+                            if (response.ok) {
+                                details.value.movie.userRating = null;
+                                const index = movies.value.findIndex(p => p.id === movieId);
+                                if (index !== -1) {
+                                    movies.value[index].userRating = null; 
+                                }
+                                newRating.value = null;
+                                alert('Rating eliminado con éxito');
+                            } else {
+                                alert('Error al eliminar rating: ' + data.status_message);
+                            }
+                        } catch (error) {
+                            console.error('Error al eliminar rating:', error);
+                        }
+                    }
+                };
+
+                return {
+                    username,
+                    password,
+                    isLogged,
+                    movies,
+                    fetchMovieDetails,
+                    onSubmit,
+                    details,
+                    newRating,
+                    rateMovie,
+                    deleteRating,
+                    sessionId
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
