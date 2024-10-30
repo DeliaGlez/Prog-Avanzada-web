@@ -1,0 +1,11 @@
+RewriteEngine On
+
+RewriteRule ^login/?$ login.php [L]
+RewriteRule ^home/?$ index.php [L]
+RewriteRule ^auth/?$ AuthController.php [L]
+RewriteRule ^resources/?$ productController.php [L]
+RewriteRule ^products/([a-zA-Z0-9-]+)/?$ details.php?slug=$1 [L,QSA]
+
+<FilesMatch ".*">
+    Require all granted
+</FilesMatch> 
