@@ -69,5 +69,6 @@ class AuthController
         header('Location: login');
     }
 }
+ 
 
 ?>
