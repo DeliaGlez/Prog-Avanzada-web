@@ -2,7 +2,7 @@
 session_start(); 
 
 if (!isset($_SESSION['token'])) {
-    header('Location: home');
+    header('Location: login');
     exit(); 
 }
 require_once 'productController.php';
