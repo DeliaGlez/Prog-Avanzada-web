@@ -22,36 +22,42 @@
     const ctx = canvas.getContext("2d");
 
     let isDrawing = false;
+    
+    ctx.lineWidth = 10;  
+    ctx.lineJoin = ctx.lineCap = 'round';  
+    
+    const points = []; 
 
-    ctx.lineWidth = 20; 
-    ctx.lineJoin = ctx.lineCap = 'round';
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)'; 
-    ctx.shadowBlur = 5 ; 
-    ctx.shadowColor = 'rgba(0, 0, 0, 1)';
-
-    canvas.addEventListener("mousedown", (e) => {
+    canvas.onmousedown = function(e) {
         isDrawing = true;
+        points.length = 0; 
+        points.push({ x: e.offsetX, y: e.offsetY });
+    };
+
+    canvas.onmousemove = function(e) {
+        if (!isDrawing) return;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height); 
+
+        points.push({ x: e.offsetX, y: e.offsetY });
+
         ctx.beginPath();
-        ctx.moveTo(e.offsetX, e.offsetY); 
-    });
+        ctx.moveTo(points[0].x, points[0].y); 
 
-    canvas.addEventListener("mousemove", (e) => {
-        if (isDrawing) {
-            ctx.lineTo(e.offsetX, e.offsetY); 
-            ctx.stroke();
+        for (let i = 1; i < points.length; i++) {
+            ctx.lineTo(points[i].x, points[i].y);
         }
-    });
 
-    canvas.addEventListener("mouseup", () => {
-        isDrawing = false;
-        ctx.closePath();
-    });
+        ctx.stroke();
+    };
 
-    canvas.addEventListener("mouseleave", () => {
+    canvas.onmouseup = function() {
         isDrawing = false;
-        ctx.closePath();
-    });
+    };
 </script>
+
+
+
 
 
 
