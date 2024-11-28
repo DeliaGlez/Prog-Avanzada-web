@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Paint</title>
+    <style>
+        canvas {
+            background-color: white;
+            border: 1px solid black;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<canvas id="canvas" width="500" height="500"></canvas>
+
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = 'purple';
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 2;
+
+    let isDrawing = false;
+
+    canvas.onmousedown = function (e) {
+        isDrawing = true;
+        ctx.clearRect(0, 0, canvas.width, canvas.height); 
+        drawCircle(e.offsetX, e.offsetY); 
+    };
+
+    canvas.onmousemove = function (e) {
+        if (!isDrawing) return;
+        drawCircle(e.offsetX, e.offsetY);
+    };
+
+    canvas.onmouseup = function () {
+        isDrawing = false;
+    };
+
+    canvas.onmouseleave = function () {
+        isDrawing = false; 
+    };
+
+    function drawCircle(x, y) {
+        const radius = 10; 
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill(); 
+        ctx.stroke(); 
+    }
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>
