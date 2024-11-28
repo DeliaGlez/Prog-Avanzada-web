@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Paint</title>
+    <style>
+        canvas {
+            background-color: white;
+            border: 1px solid black;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<canvas id="canvas" width="500" height="500"></canvas>
+
+
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let isDrawing = false;
+    
+    ctx.lineWidth = 10;  
+    ctx.lineJoin = ctx.lineCap = 'round';  
+    ctx.shadowBlur = 10;  
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.8)'; 
+    
+    const points = []; 
+
+    canvas.onmousedown = function(e) {
+        isDrawing = true;
+        points.length = 0; 
+        points.push({ x: e.offsetX, y: e.offsetY });
+    };
+
+    canvas.onmousemove = function(e) {
+        if (!isDrawing) return;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height); 
+
+        points.push({ x: e.offsetX, y: e.offsetY });
+
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y); 
+
+        for (let i = 1; i < points.length; i++) {
+            ctx.lineTo(points[i].x, points[i].y);
+        }
+
+        ctx.stroke();
+    };
+
+    canvas.onmouseup = function() {
+        isDrawing = false;
+    };
+</script>
+
+
+
+
+
+
+</body>
+</html>
