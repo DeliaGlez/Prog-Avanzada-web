@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Paint</title>
+    <style>
+        canvas {
+            background-color: white;
+            border: 1px solid black;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<canvas id="canvas" width="500" height="500"></canvas>
+
+
+
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let isDrawing = false;
+    ctx.fillStyle = 'black'; // Color del pincel
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+
+    canvas.addEventListener("mousedown", () => {
+        isDrawing = true;
+    });
+
+    canvas.addEventListener("mousemove", (e) => {
+        if (isDrawing) {
+            drawCircle(e.offsetX, e.offsetY);
+        }
+    });
+
+    canvas.addEventListener("mouseup", () => {
+        isDrawing = false;
+    });
+
+    // Función para dibujar un círculo en una posición específica
+    function drawCircle(x, y) {
+        const radius = 10; // Radio del círculo
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2); // Dibuja un círculo completo
+        ctx.fill(); // Rellena el círculo con el color seleccionado
+    }
+</script>
+
+
+</body>
+</html>
