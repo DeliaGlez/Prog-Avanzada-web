@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Paint</title>
+    <style>
+        canvas {
+            background-color: white;
+            border: 1px solid black;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<canvas id="canvas" width="500" height="500"></canvas>
+
+
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let isDrawing = false;
+    let lastPoint = null; 
+
+    ctx.lineJoin = ctx.lineCap = 'round';
+
+    canvas.onmousedown = function (e) {
+        isDrawing = true;
+        lastPoint = { x: e.offsetX, y: e.offsetY }; 
+    };
+
+    canvas.onmousemove = function (e) {
+        if (!isDrawing) return;
+
+        const currentPoint = { x: e.offsetX, y: e.offsetY };
+
+        
+        ctx.lineWidth = Math.random() * (7 - 2) +2;
+
+        
+        ctx.beginPath();
+        ctx.moveTo(lastPoint.x, lastPoint.y);
+        ctx.lineTo(currentPoint.x, currentPoint.y);
+        ctx.stroke();
+
+        
+        lastPoint = currentPoint;
+    };
+
+    canvas.onmouseup = function () {
+        isDrawing = false;
+        lastPoint = null;
+    };
+</script>
+
+
+
+
+
+
+
+</body>
+</html>
